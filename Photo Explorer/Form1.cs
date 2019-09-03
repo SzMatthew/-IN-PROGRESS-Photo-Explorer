@@ -18,7 +18,7 @@ namespace Photo_Explorer
 {
     public partial class Photo_Explorer : Form
     {
-        private MySqlConnection con = new MySqlConnection(@"datasource=127.0.0.1;port=3306;database=photo_explorer;Username = root;Password=;CharSet=utf8;");
+        private MySqlConnection con = new MySqlConnection(Properties.Resources.connectionString);
         private List<Button> albumNameButtons = new List<Button>();
         private List<PictureBox> pictureBoxes = new List<PictureBox>();
         private List<String> PhotoPaths = new List<String>();
@@ -327,8 +327,7 @@ namespace Photo_Explorer
                 p_photos.Controls.Remove(pictureBoxes[i]);
             }
             pictureBoxes.RemoveRange(0, pictureBoxes.Count);
-            String albumName = null;
-            PrintPhotosFromFile(PhotoPaths, albumName);
+            PrintPhotosFromFile(PhotoPaths, lb_albumNameOnPanel.Text);
             p_photos.Refresh();
         }
 

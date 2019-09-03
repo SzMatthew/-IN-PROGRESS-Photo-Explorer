@@ -24,7 +24,7 @@ namespace Photo_Explorer
             InitializeComponent();
         }
 
-        MySqlConnection con = new MySqlConnection(@"datasource=127.0.0.1;port=3306;database=photo_explorer;Username = root;Password=;CharSet=utf8");
+        MySqlConnection con = new MySqlConnection(Properties.Resources.connectionString);
 
         private void Browse_Click(object sender, EventArgs e)
         {
