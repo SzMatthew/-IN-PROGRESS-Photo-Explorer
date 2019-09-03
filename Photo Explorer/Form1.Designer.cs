@@ -43,7 +43,7 @@
             this.p_menu.Location = new System.Drawing.Point(0, 56);
             this.p_menu.Name = "p_menu";
             this.p_menu.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.p_menu.Size = new System.Drawing.Size(225, 864);
+            this.p_menu.Size = new System.Drawing.Size(245, 884);
             this.p_menu.TabIndex = 0;
             this.p_menu.Paint += new System.Windows.Forms.PaintEventHandler(this.Dowload_Albums);
             // 
@@ -56,7 +56,7 @@
             this.p_photos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.p_photos.Location = new System.Drawing.Point(225, 0);
             this.p_photos.Name = "p_photos";
-            this.p_photos.Size = new System.Drawing.Size(1470, 960);
+            this.p_photos.Size = new System.Drawing.Size(1490, 980);
             this.p_photos.TabIndex = 1;
             // 
             // lb_albumsName

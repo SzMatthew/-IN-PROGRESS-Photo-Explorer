@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,13 +18,14 @@ namespace Photo_Explorer
 {
     public partial class Photo_Explorer : Form
     {
-        private MySqlConnection con = new MySqlConnection(@"datasource=127.0.0.1;port=3306;database=photo_explorer;Username = root;Password=;");
+        private MySqlConnection con = new MySqlConnection(@"datasource=127.0.0.1;port=3306;database=photo_explorer;Username = root;Password=;CharSet=utf8;");
         private List<Button> albumNameButtons = new List<Button>();
         private List<PictureBox> pictureBoxes = new List<PictureBox>();
         private List<String> PhotoPaths = new List<String>();
         private readonly int spacer = 10;
         private readonly int photosInRow = 3;
         private Image image = null;
+        private Label lb_albumNameOnPanel = new Label();
 
         public Photo_Explorer()
         {
@@ -83,7 +85,7 @@ namespace Photo_Explorer
             {
                 Button nameButton = new Button();
                 nameButton.Height = 50;
-                nameButton.Width = p_menu.Width;
+                nameButton.Width = p_menu.Width-20;
                 nameButton.Location = new Point(0, i * nameButton.Height);
                 nameButton.FlatStyle = FlatStyle.Flat;
                 nameButton.Font = new System.Drawing.Font("Segoe Script", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
@@ -140,14 +142,25 @@ namespace Photo_Explorer
             con.Close();
 
             //Print images
-            PrintPhotosFromFile(PhotoPaths);
+            PrintPhotosFromFile(PhotoPaths, albumName);
         }
 
-        private async void PrintPhotosFromFile(List<String> paths)
+        private async void PrintPhotosFromFile(List<String> paths, String albumName)
         {
-            int firstColoumY = 0;
-            int secondColoumY = 0;
-            int thirdColoumY = 0;
+            lb_albumNameOnPanel.Text = albumName;
+            lb_albumNameOnPanel.Font = new System.Drawing.Font("Segoe Script", 32F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            lb_albumNameOnPanel.ForeColor = Color.White;
+            lb_albumNameOnPanel.Visible = true;
+            lb_albumNameOnPanel.Location = new Point(((p_photos.Width-100) / 2) - lb_albumNameOnPanel.Width/2, 40);
+            lb_albumNameOnPanel.BorderStyle = BorderStyle.None;
+            lb_albumNameOnPanel.AutoSize = true;
+
+
+            p_photos.Controls.Add(lb_albumNameOnPanel);
+
+            int firstColoumY = 150;
+            int secondColoumY = 150;
+            int thirdColoumY = 150;
             int heightDifference;
 
             for (int i=0; i<paths.Count; i++)
@@ -162,7 +175,7 @@ namespace Photo_Explorer
 
                 else if (secondColoumY <= firstColoumY && secondColoumY <= thirdColoumY)
                 {
-                    heightDifference = await Task.Run(() => ShowPicture(paths[i], 2*spacer + (p_photos.Width - (4 * spacer)) / 3, secondColoumY + spacer));
+                    heightDifference = await Task.Run(() => ShowPicture(paths[i], 2*spacer + (p_photos.Width - 20 - (4 * spacer)) / 3, secondColoumY + spacer));
                     p_photos.Controls.Add(pictureBoxes[i]);
                     GC.Collect();
                     secondColoumY = secondColoumY + heightDifference + spacer;
@@ -170,7 +183,7 @@ namespace Photo_Explorer
 
                 else if (thirdColoumY <= firstColoumY && thirdColoumY <= secondColoumY)
                 {
-                    heightDifference = await Task.Run(() => ShowPicture(paths[i], spacer + 2*(spacer + (p_photos.Width - (4 * spacer)) / 3), thirdColoumY + spacer));
+                    heightDifference = await Task.Run(() => ShowPicture(paths[i], spacer + 2*(spacer + (p_photos.Width - 20 - (4 * spacer)) / 3), thirdColoumY + spacer));
                     p_photos.Controls.Add(pictureBoxes[i]);
                     GC.Collect();
                     thirdColoumY = thirdColoumY + heightDifference + spacer;
@@ -254,25 +267,23 @@ namespace Photo_Explorer
 
         private int ShowPicture(String ImagePath, int X, int Y)
         {
-            
-                image = Image.FromFile(ImagePath);
-                int photoMaxWidth = (p_photos.Width - (4 * spacer)) / photosInRow;
-                image = ResizeImage(image, photoMaxWidth, GetOppositeSideSize(image.Width, photoMaxWidth, image.Height));
-                int heightDifference = 0;
+            image = Image.FromFile(ImagePath);
+            int photoMaxWidth = ((p_photos.Width-20) - (4 * spacer)) / photosInRow;
+            image = ResizeImage(image, photoMaxWidth, GetOppositeSideSize(image.Width, photoMaxWidth, image.Height));
+            int heightDifference = 0;
 
-                PictureBox Photo = new PictureBox();
-                Photo.Image = image;
-                Photo.Width = image.Width;
-                Photo.Height = image.Height;
-                Photo.Location = new Point(X, Y);
-                Photo.Padding = new Padding(0, 0, 0, 0);
-                Photo.Visible = true;
-                Photo.Click += new EventHandler((sender, e) => Photo_Click(sender, e, ImagePath));
+            PictureBox Photo = new PictureBox();
+            Photo.Image = image;
+            Photo.Width = image.Width;
+            Photo.Height = image.Height;
+            Photo.Location = new Point(X, Y);
+            Photo.Padding = new Padding(0, 0, 0, 0);
+            Photo.Visible = true;
+            Photo.Click += new EventHandler((sender, e) => Photo_Click(sender, e, ImagePath));
 
-                heightDifference += Photo.Height;
-                pictureBoxes.Add(Photo);
+            heightDifference += Photo.Height;
+            pictureBoxes.Add(Photo);
         
-
             return heightDifference;
         }
 
@@ -298,6 +309,9 @@ namespace Photo_Explorer
                 pictureBoxes[i].Hide();
                 p_photos.Controls.Remove(pictureBoxes[i]);
             }
+            lb_albumNameOnPanel.Hide();
+            p_photos.Controls.Remove(lb_albumNameOnPanel);
+
             pictureBoxes.RemoveRange(0, pictureBoxes.Count);
 
             PhotoPaths.RemoveRange(0, PhotoPaths.Count);
@@ -313,9 +327,10 @@ namespace Photo_Explorer
                 p_photos.Controls.Remove(pictureBoxes[i]);
             }
             pictureBoxes.RemoveRange(0, pictureBoxes.Count);
-
-            PrintPhotosFromFile(PhotoPaths);
+            String albumName = null;
+            PrintPhotosFromFile(PhotoPaths, albumName);
             p_photos.Refresh();
         }
+
     }
 }

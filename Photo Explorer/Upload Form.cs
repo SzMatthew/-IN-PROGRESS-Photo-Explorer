@@ -17,14 +17,14 @@ namespace Photo_Explorer
     {
         //Global variables
         List<String> Photo_Path = new List<String>();
-        public Photo_Explorer PEForm;
+        //public Photo_Explorer PEForm;
 
         public Upload_Form()
         {
             InitializeComponent();
         }
 
-        MySqlConnection con = new MySqlConnection(@"datasource=127.0.0.1;port=3306;database=photo_explorer;Username = root;Password=;");
+        MySqlConnection con = new MySqlConnection(@"datasource=127.0.0.1;port=3306;database=photo_explorer;Username = root;Password=;CharSet=utf8");
 
         private void Browse_Click(object sender, EventArgs e)
         {
