@@ -42,12 +42,7 @@ namespace Photo_Explorer
             uploadForm.ShowDialog();
 
             //If upload form is closed Refresh the Menu
-            foreach (Button button in albumNameButtons)
-            {
-                button.Dispose();
-            }
-            p_menu.Refresh();
-            p_menu.AutoScrollPosition = new Point(0,0);
+            RefreshAlbumNames();
         }
 
         private void Dowload_Albums(object sender, PaintEventArgs e)
@@ -331,5 +326,58 @@ namespace Photo_Explorer
             p_photos.Refresh();
         }
 
+        private void AddPicture_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DeleteAlbum_Click(object sender, EventArgs e)
+        {
+            int selectedAlbumID = -1;
+
+            MySqlCommand cmd = new MySqlCommand("Select ID From Album WHERE AlbumName = @albumname;", con);
+            cmd.Parameters.AddWithValue("@albumname", lb_albumNameOnPanel.Text);
+            cmd.CommandTimeout = 60;
+            con.Open();
+            cmd.CommandType = CommandType.Text;
+            cmd.ExecuteNonQuery();
+
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                selectedAlbumID = Convert.ToInt32(rdr["ID"]);
+            }
+            con.Close();
+
+            cmd = new MySqlCommand("DELETE FROM Photo WHERE AlbumID = @albumID;", con);
+            cmd.Parameters.AddWithValue("@albumID", selectedAlbumID);
+            cmd.CommandTimeout = 60;
+            con.Open();
+            cmd.CommandType = CommandType.Text;
+            cmd.ExecuteNonQuery();
+            con.Close();
+
+            cmd = new MySqlCommand("DELETE FROM Album WHERE ID = @ID;", con);
+            cmd.Parameters.AddWithValue("@ID", selectedAlbumID);
+            cmd.CommandTimeout = 60;
+            con.Open();
+            cmd.CommandType = CommandType.Text;
+            cmd.ExecuteNonQuery();
+            con.Close();
+
+            DisposePhotos();
+
+            RefreshAlbumNames();
+        }
+
+        private void RefreshAlbumNames()
+        {
+            foreach (Button button in albumNameButtons)
+            {
+                button.Dispose();
+            }
+            p_menu.Refresh();
+            p_menu.AutoScrollPosition = new Point(0, 0);
+        }
     }
 }

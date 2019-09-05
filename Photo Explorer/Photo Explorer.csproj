@@ -80,7 +80,7 @@
       <DependentUpon>FullScreenShow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -105,6 +105,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LoadingGif.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Extra Files\transparentX.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Extra Files\transparentx_small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Extra Files\AddPic.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

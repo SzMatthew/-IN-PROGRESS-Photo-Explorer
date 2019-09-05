@@ -117,7 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="AddPic" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Extra Files\AddPic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="connectionString" xml:space="preserve">
     <value>datasource=127.0.0.1;port=3306;database=photo_explorer;Username = root;Password=;CharSet=utf8;</value>
+  </data>
+  <data name="LoadingGif" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\LoadingGif.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="String" xml:space="preserve">
+    <value />
+  </data>
+  <data name="transparentX" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Extra Files\transparentX.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="transparentx_small" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Extra Files\transparentx_small.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

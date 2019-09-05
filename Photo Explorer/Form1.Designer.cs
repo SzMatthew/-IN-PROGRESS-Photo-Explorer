@@ -30,8 +30,11 @@
         {
             this.p_menu = new System.Windows.Forms.Panel();
             this.p_photos = new System.Windows.Forms.Panel();
+            this.bt_addPic = new System.Windows.Forms.Button();
+            this.bt_delete = new System.Windows.Forms.Button();
             this.lb_albumsName = new System.Windows.Forms.Label();
             this.b_upload = new System.Windows.Forms.Button();
+            this.p_photos.SuspendLayout();
             this.SuspendLayout();
             // 
             // p_menu
@@ -54,10 +57,39 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.p_photos.AutoScroll = true;
             this.p_photos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.p_photos.Controls.Add(this.bt_addPic);
+            this.p_photos.Controls.Add(this.bt_delete);
             this.p_photos.Location = new System.Drawing.Point(225, 0);
             this.p_photos.Name = "p_photos";
             this.p_photos.Size = new System.Drawing.Size(1490, 980);
             this.p_photos.TabIndex = 1;
+            // 
+            // bt_addPic
+            // 
+            this.bt_addPic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.bt_addPic.BackColor = System.Drawing.Color.Transparent;
+            this.bt_addPic.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bt_addPic.Image = global::Photo_Explorer.Properties.Resources.AddPic;
+            this.bt_addPic.Location = new System.Drawing.Point(1428, 38);
+            this.bt_addPic.Name = "bt_addPic";
+            this.bt_addPic.Size = new System.Drawing.Size(20, 20);
+            this.bt_addPic.TabIndex = 1;
+            this.bt_addPic.UseVisualStyleBackColor = false;
+            this.bt_addPic.Click += new System.EventHandler(this.AddPicture_Click);
+            // 
+            // bt_delete
+            // 
+            this.bt_delete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.bt_delete.BackColor = System.Drawing.Color.Transparent;
+            this.bt_delete.FlatAppearance.BorderSize = 0;
+            this.bt_delete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.bt_delete.Image = global::Photo_Explorer.Properties.Resources.transparentX;
+            this.bt_delete.Location = new System.Drawing.Point(1428, 12);
+            this.bt_delete.Name = "bt_delete";
+            this.bt_delete.Size = new System.Drawing.Size(20, 20);
+            this.bt_delete.TabIndex = 0;
+            this.bt_delete.UseVisualStyleBackColor = false;
+            this.bt_delete.Click += new System.EventHandler(this.DeleteAlbum_Click);
             // 
             // lb_albumsName
             // 
@@ -100,6 +132,7 @@
             this.Name = "Photo_Explorer";
             this.Text = "Photo Explorer";
             this.ClientSizeChanged += new System.EventHandler(this.FullScreenDetect);
+            this.p_photos.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -110,6 +143,8 @@
         public System.Windows.Forms.Panel p_menu;
         public System.Windows.Forms.Button b_upload;
         public System.Windows.Forms.Label lb_albumsName;
+        public System.Windows.Forms.Button bt_delete;
+        private System.Windows.Forms.Button bt_addPic;
     }
 }
 
