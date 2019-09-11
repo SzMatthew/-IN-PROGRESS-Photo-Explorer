@@ -77,7 +77,7 @@ namespace Photo_Explorer
                     //Upload Photos for the Album with ID above
                     for (int i=0; i<Photo_Path.Count; i++)
                     {
-                        cmd = new MySqlCommand("Insert into Photo (Aperture, ShutterSpeed, Iso, PhotoData, AlbumID) values('1.8','1/100','100','" + Photo_Path[i] + "','" + albumID + "' )", con);
+                        cmd = new MySqlCommand("Insert into Photo (PhotoData, AlbumID) values('" + Photo_Path[i] + "','" + albumID + "' )", con);
                         cmd.CommandTimeout = 60;
                         con.Open();
                         cmd.CommandType = CommandType.Text;

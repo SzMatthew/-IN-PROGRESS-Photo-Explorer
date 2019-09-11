@@ -34,6 +34,7 @@
             this.bt_delete = new System.Windows.Forms.Button();
             this.lb_albumsName = new System.Windows.Forms.Label();
             this.b_upload = new System.Windows.Forms.Button();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.p_photos.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -118,6 +119,11 @@
             this.b_upload.UseVisualStyleBackColor = false;
             this.b_upload.Click += new System.EventHandler(this.UploadButton_Click);
             // 
+            // openFileDialog
+            // 
+            this.openFileDialog.FileName = "openFileDialog1";
+            this.openFileDialog.Multiselect = true;
+            // 
             // Photo_Explorer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -145,6 +151,7 @@
         public System.Windows.Forms.Label lb_albumsName;
         public System.Windows.Forms.Button bt_delete;
         private System.Windows.Forms.Button bt_addPic;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
     }
 }
 

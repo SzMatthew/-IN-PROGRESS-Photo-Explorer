@@ -18,6 +18,7 @@ namespace Photo_Explorer
 {
     public partial class Photo_Explorer : Form
     {
+        //Global variables
         private MySqlConnection con = new MySqlConnection(Properties.Resources.connectionString);
         private List<Button> albumNameButtons = new List<Button>();
         private List<PictureBox> pictureBoxes = new List<PictureBox>();
@@ -26,6 +27,10 @@ namespace Photo_Explorer
         private readonly int photosInRow = 3;
         private Image image = null;
         private Label lb_albumNameOnPanel = new Label();
+        private int firstColoumY = 150;
+        private int secondColoumY = 150;
+        private int thirdColoumY = 150;
+        private int heightDifference = 0;
 
         public Photo_Explorer()
         {
@@ -48,31 +53,37 @@ namespace Photo_Explorer
         private void Dowload_Albums(object sender, PaintEventArgs e)
         {
             List<String> AlbumNames = new List<String>();
+            bool connectionIsSuccessfull = false;
 
             //Dowload album names
-            try
+            while (connectionIsSuccessfull == false)
             {
-                MySqlCommand cmd = new MySqlCommand("Select AlbumName From Album;", con);
-                cmd.CommandTimeout = 60;
-                con.Open();
-                cmd.CommandType = CommandType.Text;
-                cmd.ExecuteNonQuery();
-
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                try
                 {
-                    AlbumNames.Add(Convert.ToString(rdr["AlbumName"]));
-                }
+                    MySqlCommand cmd = new MySqlCommand("Select AlbumName From Album;", con);
+                    cmd.CommandTimeout = 60;
+                    con.Open();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.ExecuteNonQuery();
+                    connectionIsSuccessfull = true;
 
-                con.Close();
-            }
-            catch (MySqlException)
-            {
-                MessageBox.Show("Can't connect to database!\nPlease start Xampp!");
-            }
-            finally
-            {
-                con.Close();
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        AlbumNames.Add(Convert.ToString(rdr["AlbumName"]));
+                    }
+
+                    con.Close();
+
+                }
+                catch (MySqlException)
+                {
+                    MessageBox.Show("Can't connect to database!\nPlease start Xampp!");
+                }
+                finally
+                {
+                    con.Close();
+                }
             }
 
             //Create Album Buttons
@@ -103,7 +114,6 @@ namespace Photo_Explorer
             DisposePhotos();
 
             int selectedAlbumID = -1;
-            //List<String> photoPaths = new List<String>();
 
             //Get selected album ID
             MySqlCommand cmd = new MySqlCommand("Select ID From Album WHERE AlbumName = @albumname;", con);
@@ -132,7 +142,6 @@ namespace Photo_Explorer
             {
                 PhotoPaths.Add(Convert.ToString(rdr["PhotoData"]));
             }
-            //Console.WriteLine(photoPaths.Count);
             
             con.Close();
 
@@ -153,33 +162,25 @@ namespace Photo_Explorer
 
             p_photos.Controls.Add(lb_albumNameOnPanel);
 
-            int firstColoumY = 150;
-            int secondColoumY = 150;
-            int thirdColoumY = 150;
-            int heightDifference;
-
             for (int i=0; i<paths.Count; i++)
             {
                 if (firstColoumY <= secondColoumY && firstColoumY <= thirdColoumY)
                 {
-                    heightDifference = await Task.Run(() => ShowPicture(paths[i], spacer, firstColoumY + spacer));
-                    p_photos.Controls.Add(pictureBoxes[i]);
+                    p_photos.Controls.Add(await Task.Run(() => ShowPicture(paths[i], spacer, firstColoumY + spacer)));
                     GC.Collect();
                     firstColoumY = firstColoumY + heightDifference + spacer;
                 }
 
                 else if (secondColoumY <= firstColoumY && secondColoumY <= thirdColoumY)
                 {
-                    heightDifference = await Task.Run(() => ShowPicture(paths[i], 2*spacer + (p_photos.Width - 20 - (4 * spacer)) / 3, secondColoumY + spacer));
-                    p_photos.Controls.Add(pictureBoxes[i]);
+                    p_photos.Controls.Add(await Task.Run(() => ShowPicture(paths[i], 2*spacer + (p_photos.Width - 20 - (4 * spacer)) / 3, secondColoumY + spacer)));
                     GC.Collect();
                     secondColoumY = secondColoumY + heightDifference + spacer;
                 }
 
                 else if (thirdColoumY <= firstColoumY && thirdColoumY <= secondColoumY)
                 {
-                    heightDifference = await Task.Run(() => ShowPicture(paths[i], spacer + 2*(spacer + (p_photos.Width - 20 - (4 * spacer)) / 3), thirdColoumY + spacer));
-                    p_photos.Controls.Add(pictureBoxes[i]);
+                    p_photos.Controls.Add(await Task.Run(() => ShowPicture(paths[i], spacer + 2*(spacer + (p_photos.Width - 20 - (4 * spacer)) / 3), thirdColoumY + spacer)));
                     GC.Collect();
                     thirdColoumY = thirdColoumY + heightDifference + spacer;
                 }
@@ -260,12 +261,12 @@ namespace Photo_Explorer
             return result;
         }
 
-        private int ShowPicture(String ImagePath, int X, int Y)
+        private PictureBox ShowPicture(String ImagePath, int X, int Y)
         {
             image = Image.FromFile(ImagePath);
             int photoMaxWidth = ((p_photos.Width-20) - (4 * spacer)) / photosInRow;
             image = ResizeImage(image, photoMaxWidth, GetOppositeSideSize(image.Width, photoMaxWidth, image.Height));
-            int heightDifference = 0;
+            heightDifference = 0;
 
             PictureBox Photo = new PictureBox();
             Photo.Image = image;
@@ -278,8 +279,8 @@ namespace Photo_Explorer
 
             heightDifference += Photo.Height;
             pictureBoxes.Add(Photo);
-        
-            return heightDifference;
+
+            return Photo;
         }
 
         private void Photo_Click(object sender, EventArgs e, String ImagePath)
@@ -310,6 +311,9 @@ namespace Photo_Explorer
             pictureBoxes.RemoveRange(0, pictureBoxes.Count);
 
             PhotoPaths.RemoveRange(0, PhotoPaths.Count);
+            firstColoumY = 150;
+            secondColoumY = 150;
+            thirdColoumY = 150;
         }
 
         private void FullScreenDetect(object sender, EventArgs e)
@@ -328,6 +332,52 @@ namespace Photo_Explorer
 
         private void AddPicture_Click(object sender, EventArgs e)
         {
+            //Delete existing photo path
+            PhotoPaths.RemoveRange(0, PhotoPaths.Count);
+
+            DialogResult result = openFileDialog.ShowDialog(); // Show the dialog.
+            if (result == DialogResult.OK) // Test result.
+            {
+                foreach (String file in openFileDialog.FileNames)
+                {
+                    String path = Path.GetFullPath(file);
+                    String correctedPath = path.Replace(@"\", @"\\");
+                    PhotoPaths.Add(correctedPath);
+                }
+            }
+
+            int selectedAlbumID = -1;
+
+            //Get Album Id by album name
+            MySqlCommand cmd = new MySqlCommand("Select ID From Album WHERE AlbumName = @albumname;", con);
+            cmd.Parameters.AddWithValue("@albumname", lb_albumNameOnPanel.Text);
+            cmd.CommandTimeout = 60;
+            con.Open();
+            cmd.CommandType = CommandType.Text;
+            cmd.ExecuteNonQuery();
+
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                selectedAlbumID = Convert.ToInt32(rdr["ID"]);
+            }
+            con.Close();
+
+            //Insert photos to album
+            for (int i = 0; i < PhotoPaths.Count; i++)
+            {
+                cmd = new MySqlCommand("Insert into Photo (PhotoData, AlbumID) values('" + PhotoPaths[i] + "','" + selectedAlbumID + "' )", con);
+                cmd.CommandTimeout = 60;
+                con.Open();
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+
+            MessageBox.Show("Photos added to album!");
+     
+            //Képek kirajzolása a meglévők után
+            PrintPhotosFromFile(PhotoPaths, lb_albumNameOnPanel.Text);
 
         }
 

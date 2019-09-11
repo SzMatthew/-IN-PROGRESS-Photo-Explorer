@@ -10,9 +10,6 @@ CREATE TABLE Album(
 
 CREATE TABLE Photo(
 	ID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	Aperture VARCHAR(10),
-	ShutterSpeed VARCHAR(10),
-	Iso int(10),
 	PhotoData VARCHAR(255) NOT NULL,
 	AlbumID int NOT NULL, 
 	
