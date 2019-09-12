@@ -5,12 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -31,12 +26,14 @@ namespace Photo_Explorer
         private int secondColoumY = 150;
         private int thirdColoumY = 150;
         private int heightDifference = 0;
+        
+        
 
         public Photo_Explorer()
         {
             InitializeComponent();
             this.StartPosition = FormStartPosition.Manual;
-            this.Location = new Point(50, 30);
+            this.Location = new Point(50, 30);   
         }
 
         private void UploadButton_Click(object sender, EventArgs e)
@@ -105,6 +102,7 @@ namespace Photo_Explorer
                 nameButton.Visible = true;
                 p_menu.Controls.Add(nameButton);
                 albumNameButtons.Add(nameButton);
+
             }
         }
 
@@ -267,7 +265,7 @@ namespace Photo_Explorer
             int photoMaxWidth = ((p_photos.Width-20) - (4 * spacer)) / photosInRow;
             image = ResizeImage(image, photoMaxWidth, GetOppositeSideSize(image.Width, photoMaxWidth, image.Height));
             heightDifference = 0;
-
+            Y += p_photos.AutoScrollPosition.Y;
             PictureBox Photo = new PictureBox();
             Photo.Image = image;
             Photo.Width = image.Width;
@@ -309,8 +307,8 @@ namespace Photo_Explorer
             p_photos.Controls.Remove(lb_albumNameOnPanel);
 
             pictureBoxes.RemoveRange(0, pictureBoxes.Count);
-
             PhotoPaths.RemoveRange(0, PhotoPaths.Count);
+
             firstColoumY = 150;
             secondColoumY = 150;
             thirdColoumY = 150;
