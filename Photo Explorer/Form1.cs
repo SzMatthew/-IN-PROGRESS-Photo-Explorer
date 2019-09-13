@@ -157,12 +157,12 @@ namespace Photo_Explorer
         private async void PrintPhotosFromFileAsync(List<String> paths, String albumName)
         {
             lb_albumNameOnPanel.Text = albumName;
+            lb_albumNameOnPanel.AutoSize = true;
             lb_albumNameOnPanel.Font = new System.Drawing.Font("Segoe Script", 32F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             lb_albumNameOnPanel.ForeColor = Color.White;
-            lb_albumNameOnPanel.Visible = true;
-            lb_albumNameOnPanel.Location = new Point(((p_photos.Width - 100) / 2) - lb_albumNameOnPanel.Width / 2, 40);
+            lb_albumNameOnPanel.Location = new Point(((p_photos.Width) / 2) - (lb_albumNameOnPanel.Width / 2), 40);
             lb_albumNameOnPanel.BorderStyle = BorderStyle.None;
-            lb_albumNameOnPanel.AutoSize = true;
+            lb_albumNameOnPanel.Visible = true;
 
 
             p_photos.Controls.Add(lb_albumNameOnPanel);

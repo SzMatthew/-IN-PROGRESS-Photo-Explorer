@@ -123,6 +123,9 @@
     <None Include="Extra Files\AddPic.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Extra Files\Infinite Loading.gif" />
+    <None Include="Extra Files\TransparentLoading.jpg" />
+    <None Include="Extra Files\91.gif" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

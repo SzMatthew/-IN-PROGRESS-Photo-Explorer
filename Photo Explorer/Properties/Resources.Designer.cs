@@ -63,6 +63,16 @@ namespace Photo_Explorer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap _91 {
+            get {
+                object obj = ResourceManager.GetObject("_91", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap AddPic {
             get {
                 object obj = ResourceManager.GetObject("AddPic", resourceCulture);
@@ -82,6 +92,16 @@ namespace Photo_Explorer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Infinite_Loading {
+            get {
+                object obj = ResourceManager.GetObject("Infinite_Loading", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap LoadingGif {
             get {
                 object obj = ResourceManager.GetObject("LoadingGif", resourceCulture);
@@ -95,6 +115,16 @@ namespace Photo_Explorer.Properties {
         public static string String {
             get {
                 return ResourceManager.GetString("String", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap TransparentLoading {
+            get {
+                object obj = ResourceManager.GetObject("TransparentLoading", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

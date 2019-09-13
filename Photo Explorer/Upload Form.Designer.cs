@@ -35,6 +35,8 @@
             this.button1 = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.lb_load = new System.Windows.Forms.Label();
+            this.pb_Loading = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_Loading)).BeginInit();
             this.SuspendLayout();
             // 
             // lb_albumName
@@ -103,12 +105,22 @@
             this.lb_load.Text = "Photos have been successfully choosen!";
             this.lb_load.Visible = false;
             // 
+            // pb_Loading
+            // 
+            this.pb_Loading.Location = new System.Drawing.Point(145, 88);
+            this.pb_Loading.Name = "pb_Loading";
+            this.pb_Loading.Size = new System.Drawing.Size(21, 15);
+            this.pb_Loading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pb_Loading.TabIndex = 6;
+            this.pb_Loading.TabStop = false;
+            // 
             // Upload_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Silver;
             this.ClientSize = new System.Drawing.Size(317, 197);
+            this.Controls.Add(this.pb_Loading);
             this.Controls.Add(this.lb_load);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.b_browse);
@@ -121,6 +133,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Upload Album";
+            ((System.ComponentModel.ISupportInitialize)(this.pb_Loading)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -135,5 +148,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.Label lb_load;
+        private System.Windows.Forms.PictureBox pb_Loading;
     }
 }
