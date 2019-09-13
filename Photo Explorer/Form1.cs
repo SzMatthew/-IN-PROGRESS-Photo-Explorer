@@ -6,6 +6,8 @@ using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
+using System.ServiceProcess;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -18,7 +20,7 @@ namespace Photo_Explorer
         private List<Button> albumNameButtons = new List<Button>();
         private List<PictureBox> pictureBoxes = new List<PictureBox>();
         private List<String> PhotoPaths = new List<String>();
-        private readonly int spacer = 10;
+        private readonly int spacer = 12;
         private readonly int photosInRow = 3;
         private Image image = null;
         private Label lb_albumNameOnPanel = new Label();
@@ -26,14 +28,16 @@ namespace Photo_Explorer
         private int secondColoumY = 150;
         private int thirdColoumY = 150;
         private int heightDifference = 0;
-        
-        
+        private CancellationTokenSource cts;
+        private object lockObject = new object();
+
 
         public Photo_Explorer()
         {
             InitializeComponent();
             this.StartPosition = FormStartPosition.Manual;
-            this.Location = new Point(50, 30);   
+            this.Location = new Point(50, 30);
+            lb_chooseAlbum.Location = new Point(p_photos.Width / 2 - lb_chooseAlbum.Width / 2, p_photos.Height/5);
         }
 
         private void UploadButton_Click(object sender, EventArgs e)
@@ -111,6 +115,9 @@ namespace Photo_Explorer
             //Remove Photos from screen
             DisposePhotos();
 
+            //Hide Choose Album Label
+            lb_chooseAlbum.Visible = false;
+
             int selectedAlbumID = -1;
 
             //Get selected album ID
@@ -144,46 +151,46 @@ namespace Photo_Explorer
             con.Close();
 
             //Print images
-            PrintPhotosFromFile(PhotoPaths, albumName);
+            PrintPhotosFromFileAsync(PhotoPaths, albumName);
         }
 
-        private async void PrintPhotosFromFile(List<String> paths, String albumName)
+        private async void PrintPhotosFromFileAsync(List<String> paths, String albumName)
         {
             lb_albumNameOnPanel.Text = albumName;
             lb_albumNameOnPanel.Font = new System.Drawing.Font("Segoe Script", 32F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             lb_albumNameOnPanel.ForeColor = Color.White;
             lb_albumNameOnPanel.Visible = true;
-            lb_albumNameOnPanel.Location = new Point(((p_photos.Width-100) / 2) - lb_albumNameOnPanel.Width/2, 40);
+            lb_albumNameOnPanel.Location = new Point(((p_photos.Width - 100) / 2) - lb_albumNameOnPanel.Width / 2, 40);
             lb_albumNameOnPanel.BorderStyle = BorderStyle.None;
             lb_albumNameOnPanel.AutoSize = true;
 
 
             p_photos.Controls.Add(lb_albumNameOnPanel);
 
-            for (int i=0; i<paths.Count; i++)
-            {
-                if (firstColoumY <= secondColoumY && firstColoumY <= thirdColoumY)
+                for (int i = 0; i < paths.Count; i++)
                 {
-                    p_photos.Controls.Add(await Task.Run(() => ShowPicture(paths[i], spacer, firstColoumY + spacer)));
-                    GC.Collect();
-                    firstColoumY = firstColoumY + heightDifference + spacer;
-                }
+                    if (firstColoumY <= secondColoumY && firstColoumY <= thirdColoumY)
+                    {
+                        p_photos.Controls.Add(await Task.Run(() => ShowPicture(paths[i], spacer, firstColoumY + spacer)));
+                        GC.Collect();
+                        firstColoumY = firstColoumY + heightDifference + spacer;
+                    }
 
-                else if (secondColoumY <= firstColoumY && secondColoumY <= thirdColoumY)
-                {
-                    p_photos.Controls.Add(await Task.Run(() => ShowPicture(paths[i], 2*spacer + (p_photos.Width - 20 - (4 * spacer)) / 3, secondColoumY + spacer)));
-                    GC.Collect();
-                    secondColoumY = secondColoumY + heightDifference + spacer;
-                }
+                    else if (secondColoumY <= firstColoumY && secondColoumY <= thirdColoumY)
+                    {
+                        p_photos.Controls.Add(await Task.Run(() => ShowPicture(paths[i], 2 * spacer + (p_photos.Width - 20 - (4 * spacer)) / 3, secondColoumY + spacer)));
+                        GC.Collect();
+                        secondColoumY = secondColoumY + heightDifference + spacer;
+                    }
 
-                else if (thirdColoumY <= firstColoumY && thirdColoumY <= secondColoumY)
-                {
-                    p_photos.Controls.Add(await Task.Run(() => ShowPicture(paths[i], spacer + 2*(spacer + (p_photos.Width - 20 - (4 * spacer)) / 3), thirdColoumY + spacer)));
-                    GC.Collect();
-                    thirdColoumY = thirdColoumY + heightDifference + spacer;
+                    else if (thirdColoumY <= firstColoumY && thirdColoumY <= secondColoumY)
+                    {
+                        p_photos.Controls.Add(await Task.Run(() => ShowPicture(paths[i], spacer + 2 * (spacer + (p_photos.Width - 20 - (4 * spacer)) / 3), thirdColoumY + spacer)));
+                        GC.Collect();
+                        thirdColoumY = thirdColoumY + heightDifference + spacer;
+                    }
+                    p_photos.Refresh();
                 }
-                p_photos.Refresh();
-            }
         }
 
         public static int GetOppositeSideSize(int oldSize, float newSize, int otheroldSideSize)
@@ -261,19 +268,25 @@ namespace Photo_Explorer
 
         private PictureBox ShowPicture(String ImagePath, int X, int Y)
         {
+            heightDifference = 0;
+
             image = Image.FromFile(ImagePath);
             int photoMaxWidth = ((p_photos.Width-20) - (4 * spacer)) / photosInRow;
             image = ResizeImage(image, photoMaxWidth, GetOppositeSideSize(image.Width, photoMaxWidth, image.Height));
-            heightDifference = 0;
+            
             Y += p_photos.AutoScrollPosition.Y;
+
             PictureBox Photo = new PictureBox();
-            Photo.Image = image;
-            Photo.Width = image.Width;
-            Photo.Height = image.Height;
-            Photo.Location = new Point(X, Y);
-            Photo.Padding = new Padding(0, 0, 0, 0);
-            Photo.Visible = true;
-            Photo.Click += new EventHandler((sender, e) => Photo_Click(sender, e, ImagePath));
+            lock (lockObject)
+            {
+                Photo.Image = image;
+
+                Photo.SizeMode = PictureBoxSizeMode.AutoSize;
+                Photo.Location = new Point(X, Y);
+                Photo.Padding = new Padding(0, 0, 0, 0);
+                Photo.Visible = true;
+                Photo.Click += new EventHandler((sender, e) => Photo_Click(sender, e, ImagePath));
+            }
 
             heightDifference += Photo.Height;
             pictureBoxes.Add(Photo);
@@ -316,15 +329,22 @@ namespace Photo_Explorer
 
         private void FullScreenDetect(object sender, EventArgs e)
         {
-            Console.WriteLine("Most");
+            firstColoumY = 150;
+            secondColoumY = 150;
+            thirdColoumY = 150;
 
             for (int i = 0; i < pictureBoxes.Count; i++)
             {
                 pictureBoxes[i].Hide();
                 p_photos.Controls.Remove(pictureBoxes[i]);
             }
+
             pictureBoxes.RemoveRange(0, pictureBoxes.Count);
-            PrintPhotosFromFile(PhotoPaths, lb_albumNameOnPanel.Text);
+            PrintPhotosFromFileAsync(PhotoPaths, lb_albumNameOnPanel.Text);
+
+            if (lb_chooseAlbum.Visible == true)
+                lb_chooseAlbum.Location = new Point(p_photos.Width / 2 - lb_chooseAlbum.Width / 2, p_photos.Height / 5);
+
             p_photos.Refresh();
         }
 
@@ -375,8 +395,7 @@ namespace Photo_Explorer
             MessageBox.Show("Photos added to album!");
      
             //Képek kirajzolása a meglévők után
-            PrintPhotosFromFile(PhotoPaths, lb_albumNameOnPanel.Text);
-
+            PrintPhotosFromFileAsync(PhotoPaths, lb_albumNameOnPanel.Text);
         }
 
         private void DeleteAlbum_Click(object sender, EventArgs e)

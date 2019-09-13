@@ -115,8 +115,11 @@
             this.Controls.Add(this.lb_Photos);
             this.Controls.Add(this.tb_albumName);
             this.Controls.Add(this.lb_albumName);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "Upload_Form";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Upload Album";
             this.ResumeLayout(false);
             this.PerformLayout();

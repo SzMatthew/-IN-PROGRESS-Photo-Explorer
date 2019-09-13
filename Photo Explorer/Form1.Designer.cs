@@ -28,6 +28,7 @@
         /// </summary>
         public void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Photo_Explorer));
             this.p_menu = new System.Windows.Forms.Panel();
             this.p_photos = new System.Windows.Forms.Panel();
             this.bt_addPic = new System.Windows.Forms.Button();
@@ -35,6 +36,7 @@
             this.lb_albumsName = new System.Windows.Forms.Label();
             this.b_upload = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.lb_chooseAlbum = new System.Windows.Forms.Label();
             this.p_photos.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,6 +60,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.p_photos.AutoScroll = true;
             this.p_photos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.p_photos.Controls.Add(this.lb_chooseAlbum);
             this.p_photos.Controls.Add(this.bt_addPic);
             this.p_photos.Controls.Add(this.bt_delete);
             this.p_photos.Location = new System.Drawing.Point(225, 0);
@@ -124,6 +127,21 @@
             this.openFileDialog.FileName = "openFileDialog1";
             this.openFileDialog.Multiselect = true;
             // 
+            // lb_chooseAlbum
+            // 
+            this.lb_chooseAlbum.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lb_chooseAlbum.AutoSize = true;
+            this.lb_chooseAlbum.Font = new System.Drawing.Font("Segoe Script", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.lb_chooseAlbum.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.lb_chooseAlbum.Location = new System.Drawing.Point(526, 165);
+            this.lb_chooseAlbum.Name = "lb_chooseAlbum";
+            this.lb_chooseAlbum.Size = new System.Drawing.Size(573, 40);
+            this.lb_chooseAlbum.TabIndex = 2;
+            this.lb_chooseAlbum.Text = "Choose an album from the list or add one!";
+            this.lb_chooseAlbum.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // Photo_Explorer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -135,10 +153,13 @@
             this.Controls.Add(this.p_photos);
             this.Controls.Add(this.p_menu);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Photo_Explorer";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Photo Explorer";
             this.ClientSizeChanged += new System.EventHandler(this.FullScreenDetect);
             this.p_photos.ResumeLayout(false);
+            this.p_photos.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -152,6 +173,7 @@
         public System.Windows.Forms.Button bt_delete;
         private System.Windows.Forms.Button bt_addPic;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.Label lb_chooseAlbum;
     }
 }
 
