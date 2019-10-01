@@ -28,7 +28,6 @@ namespace Photo_Explorer
         private int secondColoumY = 150;
         private int thirdColoumY = 150;
         private int heightDifference = 0;
-        private CancellationTokenSource cts;
         private object lockObject = new object();
 
 
@@ -400,41 +399,47 @@ namespace Photo_Explorer
 
         private void DeleteAlbum_Click(object sender, EventArgs e)
         {
-            int selectedAlbumID = -1;
-
-            MySqlCommand cmd = new MySqlCommand("Select ID From Album WHERE AlbumName = @albumname;", con);
-            cmd.Parameters.AddWithValue("@albumname", lb_albumNameOnPanel.Text);
-            cmd.CommandTimeout = 60;
-            con.Open();
-            cmd.CommandType = CommandType.Text;
-            cmd.ExecuteNonQuery();
-
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            DialogResult dialogResult = MessageBox.Show("Are you sure want to delete this album?", "", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
             {
-                selectedAlbumID = Convert.ToInt32(rdr["ID"]);
+                int selectedAlbumID = -1;
+
+                MySqlCommand cmd = new MySqlCommand("Select ID From Album WHERE AlbumName = @albumname;", con);
+                cmd.Parameters.AddWithValue("@albumname", lb_albumNameOnPanel.Text);
+                cmd.CommandTimeout = 60;
+                con.Open();
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
+
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    selectedAlbumID = Convert.ToInt32(rdr["ID"]);
+                }
+                con.Close();
+
+                cmd = new MySqlCommand("DELETE FROM Photo WHERE AlbumID = @albumID;", con);
+                cmd.Parameters.AddWithValue("@albumID", selectedAlbumID);
+                cmd.CommandTimeout = 60;
+                con.Open();
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
+                con.Close();
+
+                cmd = new MySqlCommand("DELETE FROM Album WHERE ID = @ID;", con);
+                cmd.Parameters.AddWithValue("@ID", selectedAlbumID);
+                cmd.CommandTimeout = 60;
+                con.Open();
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
+                con.Close();
+
+                DisposePhotos();
+
+                RefreshAlbumNames();
+
+                lb_chooseAlbum.Visible = true;
             }
-            con.Close();
-
-            cmd = new MySqlCommand("DELETE FROM Photo WHERE AlbumID = @albumID;", con);
-            cmd.Parameters.AddWithValue("@albumID", selectedAlbumID);
-            cmd.CommandTimeout = 60;
-            con.Open();
-            cmd.CommandType = CommandType.Text;
-            cmd.ExecuteNonQuery();
-            con.Close();
-
-            cmd = new MySqlCommand("DELETE FROM Album WHERE ID = @ID;", con);
-            cmd.Parameters.AddWithValue("@ID", selectedAlbumID);
-            cmd.CommandTimeout = 60;
-            con.Open();
-            cmd.CommandType = CommandType.Text;
-            cmd.ExecuteNonQuery();
-            con.Close();
-
-            DisposePhotos();
-
-            RefreshAlbumNames();
         }
 
         private void RefreshAlbumNames()
